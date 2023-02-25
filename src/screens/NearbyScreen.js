@@ -17,20 +17,20 @@ const ProfileTile = ({ profile }) => {
 const NearbyScreen = ({ navigation }) => {
   const [profiles, setProfiles] = useState(["a", "b"]);
 
-    return <View
-        className="flex flex-col justify-start items-center bg-fill-background w-full h-full p-9 space-y-6"
-    >
-        <CText styles='text-3xl font-bold'>here's who we found.</CText>
-        <View className='flex flex-row flex-wrap'>
-            {profiles.length > 0
-                ? profiles.map((profile, i) => <ProfileTile
-                    profile={profile}
-                    key={i}
-                />)
-                : <CText>we haven't found anyone yet.</CText>
-            }
-        </View>
-    </View>;
+  return (
+    <View className="flex flex-col justify-start items-center bg-fill-background w-full h-full p-9 space-y-6">
+      <CText styles="text-3xl font-bold">here's who we found.</CText>
+      <View className="flex flex-row flex-wrap">
+        {profiles.length > 0 ? (
+          profiles.map((profile, i) => (
+            <ProfileTile profile={profile} key={i} />
+          ))
+        ) : (
+          <CText>we haven't found anyone yet.</CText>
+        )}
+      </View>
+    </View>
+  );
 };
 
 export default NearbyScreen;
