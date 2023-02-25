@@ -15,11 +15,12 @@ const BroadcastScreen = ({ navigation }) => {
 
   const toggleBroadcast = async (isBroadcasting) => {
     if (!isBroadcasting) {
-      await startBroadcast();
+      const success = await startBroadcast();
+      if (success) setIsBroadcasting(true);
     } else {
       stopBroadcast();
+      setIsBroadcasting(false);
     }
-    setIsBroadcasting(!isBroadcasting);
   };
 
   const duration = 1500;
@@ -72,7 +73,7 @@ const BroadcastScreen = ({ navigation }) => {
             height: "100%",
             opacity: opacityAnim,
             borderColor: "#0006B1",
-            borderWidth: 25
+            borderWidth: 25,
           }}
         />
       </View>
