@@ -2,7 +2,25 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    colors: {
+      fill: {
+        primary: '#0006B1',
+        secondary: '#020079',
+        background: '#05014A',
+        buttonOn: '#0013DE',
+        buttonOff: '#0006B1'
+      },
+      text: {
+        primary: '#FFFFFF',
+        link: '#0021F3'
+      }
+    },
+    extend: {
+      fontSize: {
+        h1: '1.875rem',
+        h2: '1.5rem',
+      }
+    },
   },
   plugins: [],
 }
