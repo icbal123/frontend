@@ -36,20 +36,31 @@ const ProfileTile = ({ navigation, profile }) => {
 
 const NearbyScreen = ({ navigation, route }) => {
   const [profiles, setProfiles] = useState([]);
+  const [ intv, setIntv ] = useState();
+
   useEffect(() => {
-    async function doSomething() {
-      const intv = await startScan(setProfiles, () => {
-        navigation.pop();
-      });
-      setTimeout(() => {
-        stopScan(intv);
-      }, 30000);
-    }
-    doSomething();
+    startScan(setProfiles, () => navigation.pop())
+      .then((intv) => {
+        setIntv(intv);
+      })
+      .catch(console.error);
+    // async function doSomething() {
+    //   const intv = await startScan(setProfiles, () => {
+    //     navigation.pop();
+    //   });
+    //   setTimeout(() => {
+    //     stopScan(intv);
+    //   }, 30000);
+    // }
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (intv) stopScan(intv);
+    }
+  }, [ intv ]);
   return (
-    <View className="flex flex-col justify-start items-center bg-fill-background w-full h-full px-9 pb-9 space-y-6">
+    <View className="flex flex-col justify-start items-center bg-fill-background w-full h-full px-9 pt-9 space-y-6">
       <CText styles="text-3xl font-bold">here's who we found.</CText>
       {profiles.length > 0 ? <ScrollView className="flex w-full">
         <View className="flex flex-row flex-wrap w-full">

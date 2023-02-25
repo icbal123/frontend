@@ -140,8 +140,8 @@ const startScan = async (
 };
 
 const stopScan = async (interval) => {
-  await BLEAdvertiser.stopScan();
   clearInterval(interval);
+  await BLEAdvertiser.stopScan();
 };
 
 export { startScan, stopScan, startBroadcast, stopBroadcast };
