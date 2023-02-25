@@ -1,6 +1,5 @@
 import BleManager from "react-native-ble-manager";
 import BLEAdvertiser from "react-native-ble-advertiser";
-import { getAndroidId } from "react-native-device-info";
 import { userBroadcasting, getCurrentUserInfo } from "./accounts";
 import {
   NativeEventEmitter,
@@ -12,19 +11,12 @@ import {
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
-const toHex = (str) => {
-  var result = "0x";
-  for (var i = 0; i < str.length; i++) {
-    result += str.charCodeAt(i).toString(16);
-  }
-  return Number(result);
-};
+const eventEmitter = new NativeEventEmitter(NativeModules.BLEAdvertiser);
 
 const startBroadcast = async () => {
   const current_user = (await getCurrentUserInfo())[0];
-  const android_id = await getAndroidId();
   await userBroadcasting(true);
-  BLEAdvertiser.setCompanyId(toHex(android_id));
+  BLEAdvertiser.setCompanyId(0xdeadbeef1337);
   BLEAdvertiser.broadcast(current_user.uuid, [], null)
     .then((x) => console.log(x))
     .catch((err) => console.log(err));
@@ -37,11 +29,7 @@ const stopBroadcast = async () => {
     .catch((error) => console.log("Stop Broadcast Error", error));
 };
 
-const startScan = async (
-  setListener,
-  setProfiles,
-  options = { showAlert: false }
-) => {
+const startScan = async (setProfiles, options = { showAlert: false }) => {
   let lst = [];
   BleManager.enableBluetooth();
   if (Platform.OS === "android" && Platform.Version >= 23) {
@@ -63,25 +51,22 @@ const startScan = async (
       }
     }
   }
-  const listener = bleManagerEmitter.addListener(
-    "BleManagerDiscoverPeripheral",
-    (p) => {
-      lst = [...lst, p];
-    }
-  );
-  setListener(listener);
+  eventEmitter.addListener("onDeviceFound", (deviceData) => {
+    console.log(deviceData);
+  });
   setProfiles([...new Set(lst)]);
-
-  BleManager.scan([], 5, true);
+  BLEAdvertiser.setCompanyId(0xdeadbeef1337);
+  BLEAdvertiser.scan([], {});
   const scanInterval = setInterval(() => {
-    BleManager.scan([], 5, true);
+    console.log("Scanning...");
+    BLEAdvertiser.scan([], {});
   }, 10000);
 
   return scanInterval;
 };
 
 const stopScan = async (interval) => {
-  BleManager.stopScan();
+  await BLEAdvertiser.stopScan();
   clearInterval(interval);
 };
 

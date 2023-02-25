@@ -59,38 +59,24 @@ function Navigator() {
         component={MainStackScreen}
         options={{ headerShown: false }}
       />
-<<<<<<< HEAD
-      <RootStack.Group screenOptions={{ presentation: "modal" }}>
+      <RootStack.Group
+        screenOptions={{
+          presentation: "transparentModal",
+          animationTypeForReplace: "pop",
+          animation: "slide_from_bottom",
+        }}
+      >
         <RootStack.Screen
           name="PersonalInformationModal"
           component={PersonalInformationModal}
-=======
-      <RootStack.Group screenOptions={{ 
-        presentation: 'transparentModal',
-        animationTypeForReplace: 'pop',
-        animation: 'slide_from_bottom'
-      }}>
-        <RootStack.Screen 
-          name="PersonalInformationModal" 
-          component={PersonalInformationModal} 
         />
-        <RootStack.Screen 
-          name="WorkExperienceModal" 
-          component={WorkExperienceModal} 
+        <RootStack.Screen
+          name="WorkExperienceModal"
+          component={WorkExperienceModal}
         />
-        <RootStack.Screen 
-          name="EducationModal" 
-          component={EducationModal} 
-        />
-        <RootStack.Screen 
-          name="SkillsModal" 
-          component={SkillsModal} 
-        />
-        <RootStack.Screen 
-          name="InterestsModal" 
-          component={InterestsModal} 
->>>>>>> de938687efe700ab717e35cdd9d3a504f6806710
-        />
+        <RootStack.Screen name="EducationModal" component={EducationModal} />
+        <RootStack.Screen name="SkillsModal" component={SkillsModal} />
+        <RootStack.Screen name="InterestsModal" component={InterestsModal} />
       </RootStack.Group>
     </RootStack.Navigator>
   );
