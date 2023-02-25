@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { View } from "react-native";
 import CircleButton from "../clickable/CircleButton";
 import TextButton from "../clickable/TextButton";
-import TextLink from "../clickable/TextLink";
 import Form from "./Form";
 
 const AddForm = ({ 

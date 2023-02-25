@@ -26,7 +26,7 @@ const PInfoView = ({ email, pInfo }) => {
 
 const SingleExp = ({ exp }) => {
     return <View className="flex flex-col">
-        <CText styles='text-sm'><CText styles='text-sm font-bold'>{exp.title}</CText> at <CText styles='text-sm font-bold'>{exp.company}</CText>: {getDateStr(exp.from)} - {getDateStr(exp.to)}</CText>
+        <CText styles='text-sm'><CText styles='text-sm font-bold'>{exp.title}</CText> at <CText styles='text-sm font-bold'>{exp.company}</CText>: {getDateStr(exp.from.toDate())} - {getDateStr(exp.to.toDate())}</CText>
         {exp.description.map((desc, i) => <CText key={i} styles='text-xs italic'>{desc}</CText>)}
         <BoldLabel label='skilled at' content={exp.skills.join(', ')} />
     </View>
@@ -46,7 +46,7 @@ const ExperienceView = ({ experience }) => {
 
 const SingleEd = ({ ed }) => {
     return <View className="flex flex-col">
-        <CText styles='text-sm'><CText styles='text-sm font-bold'>{ed.institution}</CText> {`(${ed.country})`}: {getDateStr(ed.from)} - {getDateStr(ed.to)}</CText>
+        <CText styles='text-sm'><CText styles='text-sm font-bold'>{ed.institution}</CText> {`(${ed.country})`}: {getDateStr(ed.from.toDate())} - {getDateStr(ed.to.toDate())}</CText>
         {ed.gpa && <BoldLabel label='with a GPA of' content={ed.gpa} />}
         {ed.relevant_coursework && <View>
             <CText styles='text-xs font-bold'>relevant coursework includes</CText>

@@ -10,7 +10,7 @@ const ArrayInput = ({ label, placeholder, values, onValuesChange }) => {
     const [ input, setInput ] = useState();
 
     const addValue = (value) => {
-        if (values === undefined) values = [];
+        if (values === null) values = [];
         const newValues = [...values];
         newValues.push(value);
         onValuesChange(newValues);
@@ -20,7 +20,7 @@ const ArrayInput = ({ label, placeholder, values, onValuesChange }) => {
     const removeValue = (i) => {
         const newValues = [...values];
         newValues.splice(i, 1);
-        onValuesChange(newValues.length > 0 ? newValues : undefined);
+        onValuesChange(newValues.length > 0 ? newValues : null);
     };
 
     return <View
@@ -44,7 +44,7 @@ const ArrayInput = ({ label, placeholder, values, onValuesChange }) => {
                 />
             </View>)}
         </View>
-        <View className="flex flex-row space-x-4 mt-4">
+        <View className="flex flex-row space-x-4 mt-4 items-center">
             <View className="grow">
                 <Input 
                     placeholder={placeholder}
@@ -54,7 +54,7 @@ const ArrayInput = ({ label, placeholder, values, onValuesChange }) => {
             </View>
             <View>
                 <CircleButton
-                    isEnabled={input !== undefined}
+                    isEnabled={input}
                     char='+'
                     onClick={() => addValue(input)}
                 />
