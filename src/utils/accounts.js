@@ -159,7 +159,7 @@ const getUserInfo = async ({ uid }) => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      queriedUserData.push({ ...data, post_id: doc.id });
+      queriedUserData.push(data);
     });
   } catch (e) {
     throw e;
@@ -175,7 +175,7 @@ const getAllUserInfo = async () => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      queriedUserData.push({ ...data, post_id: doc.id });
+      queriedUserData.push(data);
     });
   } catch (e) {
     console.log(e);
@@ -195,7 +195,7 @@ const getCurrentUserInfo = async () => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      queriedUserData.push({ ...data, post_id: doc.id });
+      queriedUserData.push(data);
     });
   } catch (e) {
     throw e;
@@ -211,7 +211,7 @@ const getAllBroadcastingAndCloseUsers = async (profiles) => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      queriedUserData.push({ ...data, post_id: doc.id });
+      queriedUserData.push(data);
     });
   } catch (e) {
     throw e;

@@ -37,8 +37,8 @@ const BroadcastScreen = ({ navigation }) => {
             onClick={() => toggleBroadcast(isBroadcasting)}
           />
           <TextLink
-            text="edit your details"
-            onClick={() => console.log("edit")}
+            text="edit your details >"
+            onClick={() => navigation.navigate('ResumeScreen')}
           />
         </View>
       </View>
