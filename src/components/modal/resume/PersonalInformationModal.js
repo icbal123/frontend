@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { DeviceEventEmitter } from "react-native";
 import { getCurrentUserInfo, updateUser } from "../../../utils/accounts";
 import Form from "../../layouts/Form";
 import BaseModal from "../BaseModal";
@@ -10,7 +11,7 @@ const PersonalInformationModal = ({ navigation, route }) => {
     useEffect(() => {
         getCurrentUserInfo()
             .then(([ data ]) => {
-                if (!data.p_info) {
+                if (!data.p_info || Object.keys(data.p_info).length === 0) {
                     setInitialValues();
                     return;
                 }
@@ -29,7 +30,10 @@ const PersonalInformationModal = ({ navigation, route }) => {
 
     const onSubmit = (obj) => {
         updateUser({ p_info: obj })
-            .then(goBack)
+            .then(() => {
+                DeviceEventEmitter.emit('p_info updated', obj);
+                goBack();
+            })
             .catch(console.error);
     };
 

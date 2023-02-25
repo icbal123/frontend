@@ -4,31 +4,50 @@ import BroadcastScreen from "./BroadcastScreen";
 import ResumeScreen from "./ResumeScreen";
 import { getCurrentUserInfo } from "../utils/accounts";
 import LoginScreen from "./LoginScreen";
+import { View } from "react-native";
+import { ActivityIndicator } from "react-native";
+import CText from "../components/common/CText";
+import { checkFulfilledPL } from "../functions/validation";
 
 const HomeScreen = ({ navigation }) => {
   const [currentUser, setCurrentUser] = useState(auth.currentUser || null);
-  const [p, setP] = useState({});
-  const [l, setL] = useState(0);
   const [_, refresh] = useState(false);
+  const [ loading, setLoading ] = useState(true);
+  const [ fulfilledPL, setFulfilledPL ] = useState(false);
+
   useEffect(() => {
     const doSomething = async () => {
+      setLoading(true);
+
       try {
-        const userInfo = await getCurrentUserInfo();
-        // setP(userInfo.p_info);
-        // setL(userInfo.interests.length);
-        setP({ first_name: "a", last_name: "b", phone: "c" });
-        setL(999);
-      } catch (e) {}
+        const [ userInfo ] = await getCurrentUserInfo();
+        setFulfilledPL(checkFulfilledPL(userInfo.p_info, userInfo.interests.length));
+        setLoading(false);
+      } catch (e) {
+        setLoading(false);
+      }
     };
     doSomething();
   }, [currentUser]);
-  return currentUser && p?.first_name && p?.last_name && p?.phone && l > 0 ? (
-    <BroadcastScreen navigation={navigation} />
-  ) : currentUser ? (
-    <ResumeScreen navigation={navigation} refresh={refresh} />
-  ) : (
-    <LoginScreen navigation={navigation} setCurrentUser={setCurrentUser} />
-  );
+
+  if (loading) return <View
+    className="flex flex-col w-full h-full items-center justify-center bg-fill-background"
+  >
+    <View
+      className="flex flex-col items-center"
+    >
+      <ActivityIndicator 
+        size='large'
+        className="mb-4"
+      />
+      <CText>fetching your data...</CText>
+    </View>
+  </View>;
+
+  if (!currentUser) return <LoginScreen navigation={navigation} setCurrentUser={setCurrentUser} />;
+  console.log(fulfilledPL);
+  if (fulfilledPL) return <BroadcastScreen navigation={navigation} />;
+  return <ResumeScreen navigation={navigation} refresh={refresh} setFulfilledPL={(newPL) => setFulfilledPL(newPL)} />;
 };
 
 export default HomeScreen;

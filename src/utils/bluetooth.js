@@ -116,9 +116,9 @@ const startScan = async (
       ) {
         getUserInfoByUUID(deviceData.advertising?.serviceUUIDs[0])
           .then((x) => {
-            if (x[0]?.email) {
+            if (x[0]?.email && lst.findIndex((obj) => obj.email === x[0].email) < 0) {
               lst.push(x[0]);
-              setProfiles([...new Set(lst)]);
+              setProfiles([...lst]);
             }
           })
           .catch((e) => {

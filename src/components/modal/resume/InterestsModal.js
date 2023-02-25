@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { DeviceEventEmitter } from "react-native";
 import { getCurrentUserInfo, updateUser } from "../../../utils/accounts";
 import CText from "../../common/CText";
 import AddForm from "../../layouts/AddForm";
@@ -26,7 +27,10 @@ const InterestsModal = ({ navigation, route }) => {
 
     const onSubmit = (values) => {
         updateUser({ interests: values })
-            .then(goBack)
+            .then(() => {
+                DeviceEventEmitter.emit('interests updated', values);
+                goBack();
+            })
             .catch(console.error);
     };
 

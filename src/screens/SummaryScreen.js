@@ -90,7 +90,9 @@ const InterestsView = ({ interests }) => {
     return <CText styles='text-sm'>{interests.join(', ')}</CText>
 };
 
-const SummaryScreen = ({ email, data }) => {
+const SummaryScreen = ({ navigation, route }) => {
+    const { email, data } = route.params;
+    
     const [ opened, setOpened ] = useState();
 
     return <View

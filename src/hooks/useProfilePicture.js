@@ -6,7 +6,6 @@ const useProfilePicture = (photoURL) => {
   const [profilePictureUrl, setProfilePictureUrl] = useState(null);
 
   useEffect(() => {
-    console.log("k",auth.currentUser);
     const getImage = async () => {
       const currentUser = auth.currentUser;
       const photoRef = ref(
