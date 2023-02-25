@@ -1,11 +1,13 @@
 import { View } from "react-native";
 import TextButton from "../components/clickable/TextButton";
 import CText from "../components/common/CText";
-import { Resume } from "../components/common/keys";
+import { Resume } from "../constants/keys";
+import { modalMappings } from "../constants/modalMappings";
 
-const ResumeScreen = () => {
+const ResumeScreen = ({ navigation, route }) => {
     const openModal = (code) => {
-
+        console.log(code);
+        navigation.navigate(modalMappings[code]);
     };
 
     return <View
@@ -19,31 +21,36 @@ const ResumeScreen = () => {
                 className="flex flex-col w-full space-y-4"
             >
                 <View>
-                    <TextButton 
+                    <TextButton
+                        isEnabled
                         text='Personal Information'
                         onClick={() => openModal(Resume.PERSONAL_INFORMATION)}
                     />
                 </View>
                 <View>
-                    <TextButton 
+                    <TextButton
+                        isEnabled 
                         text='Work Experience'
                         onClick={() => openModal(Resume.WORK_EXPERIENCE)}
                     />
                 </View>
                 <View>
-                    <TextButton 
+                    <TextButton
+                        isEnabled 
                         text='Education'
                         onClick={() => openModal(Resume.EDUCATION)}
                     />
                 </View>
                 <View>
-                    <TextButton 
+                    <TextButton
+                        isEnabled 
                         text='Skills'
                         onClick={() => openModal(Resume.SKILLS)}
                     />
                 </View>
                 <View>
-                    <TextButton 
+                    <TextButton
+                        isEnabled 
                         text='Interests'
                         onClick={() => openModal(Resume.INTERESTS)}
                     />

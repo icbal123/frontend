@@ -4,22 +4,62 @@ import NearbyScreen from "../screens/NearbyScreen";
 import ResumeScreen from "../screens/ResumeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import { auth } from "../utils/firebase";
+import SummaryScreen from "../screens/SummaryScreen";
+import PersonalInformationModal from "../components/modal/resume/PersonalInformationModal";
 
-const Stack = createNativeStackNavigator();
+const MainStack = createNativeStackNavigator();
+const RootStack = createNativeStackNavigator();
+
+function MainStackScreen() {
+  const currentUser = auth.currentUser || null;
+  const initialRouteName = currentUser ? "BroadcastScreen" : "ResumeScreen";
+  return <MainStack.Navigator
+    screenOptions={{ headerShown: false }}
+    initialRouteName={initialRouteName}
+  >
+    <MainStack.Screen name="BroadcastScreen" component={BroadcastScreen} />
+    <MainStack.Screen name="NearbyScreen" component={NearbyScreen} />
+    <MainStack.Screen name="ResumeScreen" component={ResumeScreen} />
+    <MainStack.Screen name="SummaryScreen" component={SummaryScreen} />
+    <MainStack.Screen name="LoginScreen" component={LoginScreen} />
+  </MainStack.Navigator>;
+}
 
 function Navigator() {
-  const currentUser = auth.currentUser || null;
-  const initialRouteName = currentUser ? "BroadcastScreen" : "LoginScreen";
   return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName={initialRouteName}
+    <RootStack.Navigator
+      mode='modal'
+      screenOptions={{
+        headerShown: false,
+        cardStyle: { backgroundColor: 'transparent' },
+        cardOverlayEnabled: true,
+        cardStyleInterpolator: ({ current: { progress } }) => ({
+          cardStyle: {
+            opacity: progress.interpolate({
+              inputRange: [0, 0.5, 0.9, 1],
+              outputRange: [0, 0.25, 0.7, 1],
+            }),
+          },
+          overlayStyle: {
+            opacity: progress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 0.5],
+              extrapolate: 'clamp',
+            }),
+          },
+        }),
+      }}
+      initialRouteName="Main"
     >
-      <Stack.Screen name="BroadcastScreen" component={BroadcastScreen} />
-      <Stack.Screen name="NearbyScreen" component={NearbyScreen} />
-      <Stack.Screen name="ResumeScreen" component={ResumeScreen} />
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
-    </Stack.Navigator>
+      <RootStack.Screen
+        name="Main"
+        component={MainStackScreen}
+        options={{ headerShown: false }}
+      />
+      <RootStack.Group screenOptions={{ presentation: 'modal' }}>
+        <RootStack.Screen name="PersonalInformationModal" component={PersonalInformationModal} />
+      </RootStack.Group>
+    </RootStack.Navigator>
   );
 }
 
