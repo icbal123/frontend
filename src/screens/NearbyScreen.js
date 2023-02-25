@@ -19,8 +19,11 @@ const NearbyScreen = ({ navigation, route }) => {
   const [profiles, setProfiles] = useState(["a", "b"]);
   useEffect(() => {
     async function doSomething() {
-      const intv = await startScan(setProfiles);
+      const intv = await startScan(setListener, setProfiles, () =>
+        navigation.pop()
+      );
       setTimeout(() => {
+        console.log(profiles);
         stopScan(intv);
       }, 30000);
     }

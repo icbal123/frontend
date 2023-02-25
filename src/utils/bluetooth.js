@@ -7,6 +7,7 @@ import {
   PermissionsAndroid,
   Platform,
 } from "react-native";
+import RNAndroidLocationEnabler from "react-native-android-location-enabler";
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -29,26 +30,70 @@ const stopBroadcast = async () => {
     .catch((error) => console.log("Stop Broadcast Error", error));
 };
 
-const startScan = async (setProfiles, options = { showAlert: false }) => {
+const startScan = async (
+  setProfiles,
+  onPermissionsFail,
+  options = { showAlert: false }
+) => {
   let lst = [];
-  BleManager.enableBluetooth();
+  let shouldRegisterListeners = false;
+
   if (Platform.OS === "android" && Platform.Version >= 23) {
-    const result = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    const btGranted = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN
     );
-    if (result) {
-      console.log("Permission is OK");
-      await BleManager.start(options);
-    } else {
-      const result2 = await PermissionsAndroid.request(
+
+    const onUserRefuse = () => {
+      console.log("User refuse");
+    };
+
+    const onLocationPassed = async () => {
+      try {
+        const result =
+          await RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({});
+        if (result.includes("enabled")) {
+          console.log("starting");
+          await BleManager.start(options);
+          shouldRegisterListeners = true;
+        } else onUserRefuse();
+      } catch (e) {
+        onUserRefuse();
+      }
+    };
+
+    const onBTPassed = async () => {
+      await BleManager.enableBluetooth();
+
+      const locGranted = await PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
       );
-      if (result2) {
-        console.log("User accept");
-        await BleManager.start(options);
+      if (locGranted === PermissionsAndroid.RESULTS.GRANTED) {
+        await onLocationPassed();
       } else {
-        console.log("User refuse");
+        const locReq = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        );
+        if (locReq === PermissionsAndroid.RESULTS.GRANTED) {
+          await onLocationPassed();
+        } else {
+          onUserRefuse();
+        }
       }
+    };
+
+    if (!shouldRegisterListeners) {
+      onPermissionsFail();
+      return;
+    }
+
+    if (btGranted === PermissionsAndroid.RESULTS.GRANTED) {
+      await onPermissionsPassed();
+    } else {
+      const btReq = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN
+      );
+      if (btReq === PermissionsAndroid.RESULTS.GRANTED) await onBTPassed();
+      else onUserRefuse();
     }
   }
   eventEmitter.addListener("onDeviceFound", (deviceData) => {
