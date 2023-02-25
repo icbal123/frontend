@@ -1,25 +1,33 @@
-import { BleManager } from "react-native-ble-manager";
+import BleManager from "react-native-ble-manager";
+import { NativeEventEmitter, NativeModules } from "react-native";
 
-const startBleManager = async (options = undefined) => {
-  await BleManager.start(options);
+const BleManagerModule = NativeModules.BleManager;
+const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+
+const handleDiscoverPeripheral = (peripheral) => {
+  console.log("Got BLE peripheral", peripheral);
+};
+
+const startBleManager = (options = { showAlert: false }) => {
+  console.log(BleManager);
+  BleManager.start(options);
   return true;
 };
 
-const getNearbyDevices = (manager, callback = ((scannedDevice) => {})) => {
-  manager.startDeviceScan(
-    null,
-    { allowDuplicates: true },
-    (error, scannedDevice) => {
-      if (error) {
-        console.log(error);
-      } else {
-        callback(scannedDevice);
-      }
-    }
+const setListener = () => {
+  const listener = bleManagerEmitter.addListener(
+    "BleManagerDiscoverPeripheral",
+    handleDiscoverPeripheral
   );
-  return () => {
-    manager.stopDeviceScan();
-  };
+  return listener;
 };
 
-export { createBleManager, getNearbyDevices };
+const startBleScan = () => {
+  BleManager.scan([], 5, true);
+};
+
+const stopBleScan = () => {
+  BleManager.stopScan();
+};
+
+export { startBleManager, startBleScan, stopBleScan, setListener };
