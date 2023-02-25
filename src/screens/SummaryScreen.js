@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View } from "react-native";
 import CText from "../components/common/CText";
-import { Resume } from "../components/common/keys";
+import { Resume } from "../constants/keys";
 import Accordion from "../components/layouts/Accordion";
 import SubtitledText from "../components/text/SubtitledText";
 

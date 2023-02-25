@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { Image } from "react-native";
-import { TouchableWithoutFeedback } from "react-native";
-import { View } from "react-native";
+import { Image, TouchableWithoutFeedback, View } from "react-native";
 import CText from "../components/common/CText";
 
 const ProfileTile = ({ profile }) => {

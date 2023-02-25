@@ -9,11 +9,13 @@ module.exports = {
         background: "#05014A",
         buttonOn: "#0013DE",
         buttonOff: "#0006B1",
+        modal: "#FFFFFF",
       },
       text: {
         primary: "#FFFFFF",
         link: "#0021F3",
         errorRed: "#FF0000",
+        alternate: "#232323",
       },
     },
     extend: {},
