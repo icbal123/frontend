@@ -1,10 +1,11 @@
-import { View } from "react-native";
-import BroadcastScreen from "./src/screens/BroadcastScreen";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import "react-native-gesture-handler";
+import Navigator from "./src/routes/Navigator";
 
 export default function App() {
   return (
-    <View className="flex w-screen h-screen items-center justify-center">
-      <BroadcastScreen />
-    </View>
+    <NavigationContainer theme={DefaultTheme}>
+      <Navigator />
+    </NavigationContainer>
   );
-};
+}
