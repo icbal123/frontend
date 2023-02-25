@@ -79,22 +79,37 @@ const updateUser = async ({
   interests,
   resume,
 }) => {
-  await updateProfile(auth.currentUser, {
-    p_info,
-    experience,
-    education,
-    skills,
-    interests,
-    resume,
-  });
+  let obj = {};
+  if (p_info) obj.p_info = p_info;
+  if (experience) obj.experience = experience;
+  if (education) obj.education = education;
+  if (skills) obj.skills = skills;
+  if (interests) obj.interests = interests;
+  if (resume) obj.resume = resume;
+  
+  if (!obj) return;
+  try {
+    await updateProfile(auth.currentUser, obj);
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const loginUser = async ({ email, password }) => {
-  await signInWithEmailAndPassword(auth, email, password);
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  }
+  catch (e) {
+    console.error(e);
+  }
 };
 
 const logoutUser = async () => {
-  await signOut(auth);
+  try {
+    await signOut(auth);
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const setUserProfilePic = async ({ image }) => {
@@ -103,34 +118,48 @@ const setUserProfilePic = async ({ image }) => {
   };
   const photoURL = `profile_pictures/${new Date().getTime()}-media.png`;
   const storageRef = ref(storage, photoURL);
-  await uploadBytes(storageRef, image, metadata);
-  await updateProfile(auth.currentUser, {
-    photoURL,
-  });
+  try {
+    await uploadBytes(storageRef, image, metadata);
+    await updateProfile(auth.currentUser, {
+      photoURL,
+    });
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const getUserInfo = async ({ uid }) => {
   let queriedUserData = [];
   const q = query(collection(db, "User"), where("uid", "==", uid));
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    data.timestamp = new Date(data.timestamp.seconds * 1000);
-    queriedUserData.push({ ...data, post_id: doc.id });
-  });
-  return queriedUserData;
+  try {
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      data.timestamp = new Date(data.timestamp.seconds * 1000);
+      queriedUserData.push({ ...data, post_id: doc.id });
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    return queriedUserData;
+  }
 };
 
 const getAllUserInfo = async () => {
   let queriedUserData = [];
   const q = query(collection(db, "User"));
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    data.timestamp = new Date(data.timestamp.seconds * 1000);
-    queriedUserData.push({ ...data, post_id: doc.id });
-  });
-  return queriedUserData;
+  try {
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      data.timestamp = new Date(data.timestamp.seconds * 1000);
+      queriedUserData.push({ ...data, post_id: doc.id });
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    return queriedUserData;
+  }
 };
 
 const getCurrentUserInfo = async () => {
@@ -139,13 +168,18 @@ const getCurrentUserInfo = async () => {
     collection(db, "User"),
     where("uid", "==", auth.currentUser.uid)
   );
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    data.timestamp = new Date(data.timestamp.seconds * 1000);
-    queriedUserData.push({ ...data, post_id: doc.id });
-  });
-  return queriedUserData;
+  try {
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      data.timestamp = new Date(data.timestamp.seconds * 1000);
+      queriedUserData.push({ ...data, post_id: doc.id });
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    return queriedUserData;
+  }
 };
 
 export {

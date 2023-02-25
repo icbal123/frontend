@@ -6,11 +6,10 @@ const createBleManager = () => {
   return manager;
 };
 
-const getNearbyDevices = ({ manager, callback }) => {
+const getNearbyDevices = (manager, callback = ((scannedDevice) => {})) => {
   manager.startDeviceScan(
     null,
-    null,
-    // { allowDuplicates: true },
+    { allowDuplicates: true },
     (error, scannedDevice) => {
       if (error) {
         console.log(error);
