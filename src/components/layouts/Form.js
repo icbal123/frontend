@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import TextButton from "../clickable/TextButton";
 import ArrayInput from "../inputs/ArrayInput";
@@ -6,6 +6,8 @@ import DateInput from "../inputs/DateInput";
 import Input from "../inputs/Input";
 
 const Form = ({ 
+    initialValues,
+    shouldPreserveValues,
     keys, 
     requiredKeys, 
     labels, 
@@ -13,14 +15,25 @@ const Form = ({
     submitButtonLabel, 
     onSubmit 
 }) => {
-    const getDefaultObj = () => Object.fromEntries(keys.map((k, _) => [k, undefined]));
-    const [ obj, setObj ] = useState(getDefaultObj());
+    const getDefaultObj = () => Object.fromEntries(keys.map((k, i) => [k, null]));
+    const mapObj = () => Object.fromEntries(keys.map((k, i) => [k, initialValues[i]]));
+    const [ obj, setObj ] = useState(initialValues ? mapObj() : getDefaultObj());
+    const [ canSubmit, setCanSubmit ] = useState(false);
+
+    useEffect(() => setObj(initialValues ? mapObj() : getDefaultObj()), [ initialValues ]);
+    useEffect(() => setCanSubmit(requiredKeys.length > 1 ? requiredKeys.reduce((prev, curKey) => {
+        console.log(obj[curKey]);
+        const curValid = obj[curKey] !== null;
+        if (prev === null) return curValid;
+        return curValid && prev; 
+    }) : obj[requiredKeys[0]] !== null), [ obj ]);
+
     requiredKeys = requiredKeys || [];
     submitButtonLabel = submitButtonLabel || 'save';
     inputTypes = inputTypes || {};
 
     const changeObj = (key, value) => {
-        obj[key] = value;
+        obj[key] = value ? value : null;
         setObj({...obj});
     };
 
@@ -28,7 +41,7 @@ const Form = ({
         className="flex flex-col w-full space-y-4"
     >
         <View
-            className="flex flex-col w-full space-y-3"
+            className="flex flex-col w-full space-y-3 mt-4"
         >
             {keys.map((key, i) => {
                 const changeFn = (newVal) => changeObj(key, newVal);
@@ -75,15 +88,11 @@ const Form = ({
         </View>
         <View>
             <TextButton 
-                isEnabled={requiredKeys.reduce((prev, curKey) => {
-                    const curValid = obj[curKey] !== undefined;
-                    if (prev === undefined) return curValid;
-                    return curValid && prev; 
-                })}
+                isEnabled={canSubmit}
                 text={submitButtonLabel}
                 onClick={() => {
                     onSubmit(obj);
-                    setObj(getDefaultObj());
+                    if (!shouldPreserveValues) setObj(getDefaultObj());
                 }}
             />
         </View>

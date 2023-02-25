@@ -19,7 +19,7 @@ const DateInput = ({
         />}
         <TextButton 
             isEnabled
-            text={`${label}${value !== undefined ? ': ' + value.toLocaleDateString(
+            text={`${label}${value ? ': ' + value.toLocaleDateString(
                     'en-US',
                     { month: 'short', year: 'numeric' }
                 )

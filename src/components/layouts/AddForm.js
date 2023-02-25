@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import CircleButton from "../clickable/CircleButton";
 import TextButton from "../clickable/TextButton";
@@ -18,6 +18,8 @@ const AddForm = ({
     const [ values, setValues ] = useState(initialValues || []);
     submitButtonLabel = submitButtonLabel || 'save';
 
+    useEffect(() => setValues(initialValues || []), [ initialValues ]);
+
     const addValue = (value) => {
         const newValues = [...values];
         newValues.push(value);
@@ -36,9 +38,9 @@ const AddForm = ({
         <View
             className='flex flex-col'
         >
-            {values.map((value, i) => <View
+            {values && values.map((value, i) => <View
                 key={`value-${i}`}
-                className='flex flex-row py-4 border-b border-b-text-alternate'
+                className='flex flex-row py-4 border-b border-b-text-alternate items-center'
             >
                 {getComponent(value)}
                 <View className="flex grow" />

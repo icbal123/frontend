@@ -8,7 +8,7 @@ const BaseModal = ({ goBack, children, title }) => {
         <Pressable
             onPress={() => goBack()}
         >
-            <View className="flex grow" />
+            <View className="flex h-1/6" />
         </Pressable>
         <View
             className="flex h-5/6 drop-shadow bg-fill-modal space-y-4 rounded-lg p-4 items-center"
