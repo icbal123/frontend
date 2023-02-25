@@ -14,7 +14,6 @@ const BroadcastScreen = ({ navigation }) => {
   const opacityAnim = useRef(new Animated.Value(1)).current;
 
   const toggleBroadcast = async (isBroadcasting) => {
-    // console.log(devices);
     if (!isBroadcasting) {
       await startBroadcast();
     } else {
