@@ -23,7 +23,6 @@ const NearbyScreen = ({ navigation, route }) => {
         navigation.pop();
       });
       setTimeout(() => {
-        console.log(profiles);
         stopScan(intv);
       }, 30000);
     }
@@ -35,9 +34,10 @@ const NearbyScreen = ({ navigation, route }) => {
       <CText styles="text-3xl font-bold">here's who we found.</CText>
       <View className="flex flex-row flex-wrap">
         {profiles.length > 0 ? (
-          profiles.map((profile, i) => (
-            <ProfileTile profile={profile} key={i} />
-          ))
+          profiles.map((profile, i) => {
+            console.log(profiles);
+            return <ProfileTile profile={profile} key={i} />;
+          })
         ) : (
           <CText>we haven't found anyone yet.</CText>
         )}

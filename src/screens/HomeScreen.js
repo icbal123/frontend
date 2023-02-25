@@ -14,7 +14,6 @@ const HomeScreen = ({ navigation }) => {
     const doSomething = async () => {
       try {
         const userInfo = await getCurrentUserInfo();
-        console.log(userInfo);
         // setP(userInfo.p_info);
         // setL(userInfo.interests.length);
         setP({ first_name: "a", last_name: "b", phone: "c" });

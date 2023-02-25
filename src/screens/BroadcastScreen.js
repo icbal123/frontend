@@ -7,9 +7,7 @@ import { startBroadcast, stopBroadcast } from "../utils/bluetooth";
 
 const BroadcastScreen = ({ navigation }) => {
   const [isBroadcasting, setIsBroadcasting] = useState(false);
-  const [interval, setInterval] = useState(null);
   const toggleBroadcast = async (isBroadcasting) => {
-    // console.log(devices);
     if (!isBroadcasting) {
       await startBroadcast();
     } else {

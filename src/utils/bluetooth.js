@@ -1,6 +1,11 @@
 import BleManager from "react-native-ble-manager";
 import BLEAdvertiser from "react-native-ble-advertiser";
-import { userBroadcasting, getCurrentUserInfo } from "./accounts";
+import {
+  userBroadcasting,
+  getCurrentUserInfo,
+  getAllUserInfo,
+  getUserInfoByUUID,
+} from "./accounts";
 import {
   NativeEventEmitter,
   NativeModules,
@@ -9,16 +14,18 @@ import {
 } from "react-native";
 import RNAndroidLocationEnabler from "react-native-android-location-enabler";
 
-// const BleManagerModule = NativeModules.BleManager;
-// const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+const BleManagerModule = NativeModules.BleManager;
+const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
-const eventEmitter = new NativeEventEmitter(NativeModules.BLEAdvertiser);
+// const eventEmitter = new NativeEventEmitter(NativeModules.BLEAdvertiser);
 
 const startBroadcast = async () => {
   const current_user = (await getCurrentUserInfo())[0];
   await userBroadcasting(true);
-  BLEAdvertiser.setCompanyId(0xdeadbeef1337);
-  BLEAdvertiser.broadcast(current_user.uuid, [], null)
+  BLEAdvertiser.setCompanyId(0x4c);
+  BLEAdvertiser.broadcast(current_user.uuid, [], {
+    advertiseMode: BLEAdvertiser.ADVERTISE_MODE_LOW_LATENCY,
+  })
     .then((x) => console.log(x))
     .catch((err) => console.log(err));
 };
@@ -37,6 +44,10 @@ const startScan = async (
 ) => {
   let lst = [];
   let shouldRegisterListeners = false;
+
+  let userInfo = (await getAllUserInfo()).map((item) => {
+    return item.uuid;
+  });
 
   if (Platform.OS === "android" && Platform.Version >= 23) {
     const btGranted = await PermissionsAndroid.check(
@@ -94,16 +105,35 @@ const startScan = async (
     onPermissionsFail();
     return;
   }
-  eventEmitter.addListener("onDeviceFound", (deviceData) => {
-    console.log(deviceData);
-    lst.push(deviceData);
-    setProfiles([...new Set(lst)]);
-  });
-  BLEAdvertiser.setCompanyId(0xdeadbeef1337);
-  BLEAdvertiser.scan([], {});
-  const scanInterval = setInterval(() => {
+  bleManagerEmitter.addListener(
+    "BleManagerDiscoverPeripheral",
+    (deviceData) => {
+      // console.log(userInfo);
+      if (
+        deviceData?.advertising?.serviceUUIDs &&
+        deviceData.advertising.serviceUUIDs.length > 0 &&
+        deviceData.advertising.serviceUUIDs[0].length > 10
+      ) {
+        getUserInfoByUUID(deviceData.advertising?.serviceUUIDs[0])
+          .then((x) => {
+            if (x[0]?.email) {
+              lst.push(x[0].email);
+              setProfiles([...new Set(lst)]);
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
+    }
+  );
+  BleManager.scan([], 5, true);
+  const scanInterval = setInterval(async () => {
+    userInfo = (await getAllUserInfo()).map((item) => {
+      return item.uuid;
+    });
     console.log("Scanning...");
-    BLEAdvertiser.scan([], {});
+    BleManager.scan([], 5, true);
   }, 10000);
 
   return scanInterval;

@@ -2,6 +2,7 @@ import { auth, db, storage } from "./firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { getMacAddress } from "react-native-device-info";
 import "react-native-get-random-values";
@@ -63,6 +64,9 @@ const createUser = async ({ email, password }) => {
       password
     );
     const uuid = v4();
+    await updateProfile(auth.currentUser, {
+      photoURL: "profile_pictures/default.png",
+    });
     await setDoc(doc(db, "users", auth.currentUser.uid), {
       post: auth.currentUser.uid,
       email,
@@ -72,7 +76,6 @@ const createUser = async ({ email, password }) => {
       skills: [],
       interests: [],
       resume: null,
-      photoURL: "profile_pictures/default.png",
       broadcast: false,
       uuid,
     });
@@ -144,7 +147,7 @@ const setUserProfilePic = async ({ image }) => {
   const storageRef = ref(storage, photoURL);
   try {
     await uploadBytes(storageRef, image, metadata);
-    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+    await updateProfile(auth.currentUser, {
       photoURL,
     });
   } catch (e) {
@@ -152,14 +155,29 @@ const setUserProfilePic = async ({ image }) => {
   }
 };
 
-const getUserInfo = async ({ uid }) => {
+const getUserInfoByPost = async ({ post }) => {
   let queriedUserData = [];
-  const q = query(collection(db, "users"), where("post", "==", uid));
+  const q = query(collection(db, "users"), where("post", "==", post));
   try {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      queriedUserData.push({ ...data, post_id: doc.id });
+      queriedUserData.push(data);
+    });
+  } catch (e) {
+    throw e;
+  } finally {
+    return queriedUserData;
+  }
+};
+const getUserInfoByUUID = async (uuid) => {
+  let queriedUserData = [];
+  const q = query(collection(db, "users"), where("uuid", "==", uuid));
+  try {
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      queriedUserData.push(data);
     });
   } catch (e) {
     throw e;
@@ -175,7 +193,7 @@ const getAllUserInfo = async () => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      queriedUserData.push({ ...data, post_id: doc.id });
+      queriedUserData.push(data);
     });
   } catch (e) {
     console.log(e);
@@ -195,7 +213,7 @@ const getCurrentUserInfo = async () => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      queriedUserData.push({ ...data, post_id: doc.id });
+      queriedUserData.push(data);
     });
   } catch (e) {
     throw e;
@@ -211,7 +229,7 @@ const getAllBroadcastingAndCloseUsers = async (profiles) => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      queriedUserData.push({ ...data, post_id: doc.id });
+      queriedUserData.push(data);
     });
   } catch (e) {
     throw e;
@@ -226,7 +244,8 @@ export {
   loginUser,
   logoutUser,
   setUserProfilePic,
-  getUserInfo,
+  getUserInfoByPost as getUserInfo,
+  getUserInfoByUUID,
   getAllUserInfo,
   getCurrentUserInfo,
   userBroadcasting,
