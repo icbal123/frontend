@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Image } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
 import { View } from "react-native";
+import { useState } from "react";
 import CText from "../components/common/CText";
 
 const ProfileTile = ({ profile }) => {
@@ -20,8 +21,8 @@ const ProfileTile = ({ profile }) => {
     </TouchableWithoutFeedback>;
 };
 
-const NearbyScreen = () => {
-    const [ profiles, setProfiles ] = useState(['a', 'b']);
+const NearbyScreen = ({ navigation }) => {
+  const [profiles, setProfiles] = useState(["a", "b"]);
 
     return <View
         className="flex flex-col justify-start items-center bg-fill-background w-full h-full p-9 space-y-6"
