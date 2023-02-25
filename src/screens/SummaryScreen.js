@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import CText from "../components/common/CText";
 import { Resume } from "../constants/keys";
@@ -7,7 +7,8 @@ import SubtitledText from "../components/text/SubtitledText";
 import { getDateStr } from "../functions/date";
 import CircularImage from "../components/common/CircularImage";
 import { storage } from "../utils/firebase";
-import { ref } from "@firebase/storage";
+import { getDownloadURL, ref } from "@firebase/storage";
+import CircleButton from "../components/clickable/CircleButton";
 
 const BlankView = () => <CText>nothing here.</CText>;
 const BoldLabel = ({ label, content }) => <CText styles='text-sm'><CText styles='text-sm font-bold'>{label}</CText> {content}</CText>;
@@ -32,7 +33,7 @@ const SingleExp = ({ exp }) => {
 };
 
 const ExperienceView = ({ experience }) => {
-    if (!experience) return <BlankView />;
+    if (!experience || experience.length < 1) return <BlankView />;
 
     return <View
         className="flex flex-col space-y-3"
@@ -54,7 +55,7 @@ const SingleEd = ({ ed }) => {
     </View>
 }
 const EducationView = ({ education }) => {
-    if (!education) return <BlankView />;
+    if (!education || education.length < 1) return <BlankView />;
 
     return <View
         className="flex flex-col space-y-3"
@@ -76,7 +77,7 @@ const SingleSkill = ({ skill }) => {
 };
 
 const SkillsView = ({ skills }) => {
-    if (!skills) return <BlankView />;
+    if (!skills || skills.length < 1) return <BlankView />;
 
     return <View
         className="flex flex-col space-y-3"
@@ -88,7 +89,7 @@ const SkillsView = ({ skills }) => {
 };
 
 const InterestsView = ({ interests }) => {
-    if (!interests) return <BlankView />;
+    if (!interests || interests.length < 1) return <BlankView />;
 
     return <CText styles='text-sm'>{interests.join(', ')}</CText>
 };
@@ -112,17 +113,21 @@ const SummaryScreen = ({ navigation, route }) => {
     }, [ data ]);
 
     return <View
-        className="flex flex-col w-full h-full items-stretch p-9 bg-fill-background space-y-6 overflow-auto"
+        className="flex flex-col w-full h-full items-center p-9 bg-fill-background space-y-6 overflow-auto"
     >
-        <CircularImage 
-            width='w-1/2'
-            isLoading={imageLoading}
-            url={imageURL}
-        />
-        <SubtitledText 
-            text={`${data.p_info.first_name} ${data.p_info.last_name}`}
-            subtitle='a quick summary'
-        />
+        <View>
+            <CircularImage 
+                width='w-1/2'
+                isLoading={imageLoading}
+                url={imageURL}
+            />
+        </View>
+        <View>
+            <SubtitledText 
+                text={`${data.p_info.first_name} ${data.p_info.last_name}`}
+                subtitle='a quick summary'
+            />
+        </View>
         <View
             className="flex flex-col w-full space-y-4"
         >

@@ -5,7 +5,7 @@ import CircularImage from "../components/common/CircularImage";
 import CText from "../components/common/CText";
 import { ScrollView } from "react-native";
 import { storage } from "../utils/firebase";
-import { ref } from "@firebase/storage";
+import { getDownloadURL, ref } from "@firebase/storage";
 
 const ProfileTile = ({ navigation, profile }) => {
   const [ imageLoading, setImageLoading ] = useState(true);
@@ -23,6 +23,7 @@ const ProfileTile = ({ navigation, profile }) => {
 
   return (
     <Pressable
+      className="flex w-full"
         onPress={() => navigation.navigate('SummaryScreen', { email: profile.email, data: profile })}
     >
       <View className="flex flex-col space-y-1 items-center w-1/2 p-4">
@@ -50,17 +51,16 @@ const NearbyScreen = ({ navigation, route }) => {
   return (
     <View className="flex flex-col justify-start items-center bg-fill-background w-full h-full px-9 pb-9 space-y-6">
       <CText styles="text-3xl font-bold">here's who we found.</CText>
-      <ScrollView>
-        <View className="flex flex-row flex-wrap">
-            {profiles.length > 0 ? (
-            profiles.map((profile, i) => {
+      {profiles.length > 0 ? <ScrollView className="flex w-full">
+        <View className="flex flex-row flex-wrap w-full">
+            {profiles.map((profile, i) => {
                 return <ProfileTile navigation={navigation} profile={profile} key={i} />;
-            })
-            ) : (
-            <CText>we haven't found anyone yet.</CText>
-            )}
+            })}
         </View>
       </ScrollView>
+      : <CText styles='mt-6'>we haven't found anyone yet.</CText>
+      }
+        
     </View>
   );
 };

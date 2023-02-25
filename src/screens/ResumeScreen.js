@@ -21,7 +21,6 @@ const ResumeScreen = ({ navigation, route, setFulfilledPL }) => {
     const [ imageURL, setImageURL ] = useState(); 
     const [ p, setP ] = useState({});
     const [ l, setL ] = useState(0);
-    const [ navigationListener, setNavigationListener ] = useState();
 
     const setNewImage = (photoURL) => {
         setImageLoading(true);

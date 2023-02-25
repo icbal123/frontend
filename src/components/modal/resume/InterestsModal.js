@@ -26,7 +26,7 @@ const InterestsModal = ({ navigation, route }) => {
     }, []);
 
     const onSubmit = (values) => {
-        updateUser({ interests: values })
+        updateUser({ interests: values.map((obj, _) => obj.interest) })
             .then(() => {
                 DeviceEventEmitter.emit('interests updated', values);
                 goBack();
