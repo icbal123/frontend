@@ -1,5 +1,6 @@
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from 'react';
+import { getDateStr } from '../../functions/date';
 import TextButton from '../clickable/TextButton';
 
 const DateInput = ({
@@ -19,12 +20,7 @@ const DateInput = ({
         />}
         <TextButton 
             isEnabled
-            text={`${label}${value ? ': ' + value.toLocaleDateString(
-                    'en-US',
-                    { month: 'short', year: 'numeric' }
-                )
-                : ''
-            }`}
+            text={`${label}${value ? ': ' + getDateStr(value) : ''}`}
             color='bg-text-alternate'
             onClick={() => setOpen(true)}
             align='start'

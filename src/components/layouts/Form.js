@@ -22,7 +22,6 @@ const Form = ({
 
     useEffect(() => setObj(initialValues ? mapObj() : getDefaultObj()), [ initialValues ]);
     useEffect(() => setCanSubmit(requiredKeys.length > 1 ? requiredKeys.reduce((prev, curKey) => {
-        console.log(obj[curKey]);
         const curValid = obj[curKey] !== null;
         if (prev === null) return curValid;
         return curValid && prev; 

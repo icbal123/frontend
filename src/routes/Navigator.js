@@ -16,7 +16,11 @@ const RootStack = createNativeStackNavigator();
 function MainStackScreen() {
   return (
     <MainStack.Navigator
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ 
+        headerShown: false,
+        animation: 'slide_from_right',
+        animationTypeForReplace: 'pop' 
+      }}
       initialRouteName={"HomeScreen"}
     >
       <MainStack.Screen name="HomeScreen" component={HomeScreen} />

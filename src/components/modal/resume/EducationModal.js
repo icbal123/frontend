@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { View } from "react-native";
+import { getDateStr } from "../../../functions/date";
 import { getCurrentUserInfo, updateUser } from "../../../utils/accounts";
 import CText from "../../common/CText";
 import AddForm from "../../layouts/AddForm";
@@ -12,7 +13,7 @@ const renderEducation = (education) => {
     >
         <CText color='text-text-alternate'>country: {education.type}</CText>
         <CText color='text-text-alternate'>institution: {education.title}</CText>
-        <CText color='text-text-alternate'>from {education.from.toLocaleDateString('en-US', formatOptions)} to {education.to.toLocaleDateString('en-US', formatOptions)}</CText>
+        <CText color='text-text-alternate'>from {getDateStr(education.from)} to {getDateStr(education.to)}</CText>
         <CText color='text-text-alternate'>GPA: {education.gpa !== null ? education.gpa : '-'}</CText>
         <CText color='text-text-alternate' styles='font-bold'>relevant_coursework</CText>
         {education.relevant_coursework !== null 

@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { View } from "react-native";
+import { getDateStr } from "../../../functions/date";
 import { getCurrentUserInfo, updateUser } from "../../../utils/accounts";
 import CText from "../../common/CText";
 import AddForm from "../../layouts/AddForm";
 import BaseModal from "../BaseModal";
 
 const renderWorkExperience = (exp) => {
-    const formatOptions = { month: 'short', year: 'numeric' };
     return <View
         className="flex flex-col"
     >
         <CText color='text-text-alternate'>type: {exp.type}</CText>
         <CText color='text-text-alternate'>title: {exp.title}</CText>
         <CText color='text-text-alternate'>company: {exp.company}</CText>
-        <CText color='text-text-alternate'>from {exp.from.toLocaleDateString('en-US', formatOptions)} to {exp.to.toLocaleDateString('en-US', formatOptions)}</CText>
+        <CText color='text-text-alternate'>from {getDateStr(exp.from)} to {getDateStr(exp.to)}</CText>
         <CText color='text-text-alternate' styles='font-bold'>description</CText>
         {exp.description.map((desc, _) => <CText color='text-text-alternate'>{'- '}{desc}</CText>)}
         <CText color='text-text-alternate' styles='font-bold'>skills</CText>

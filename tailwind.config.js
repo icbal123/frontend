@@ -17,6 +17,9 @@ module.exports = {
         errorRed: "#FF0000",
         alternate: "#232323",
       },
+      stroke: {
+        input: '#cfcfcf'
+      }
     },
     extend: {},
   },

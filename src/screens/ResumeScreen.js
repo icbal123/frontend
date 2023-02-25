@@ -6,6 +6,7 @@ import CText from "../components/common/CText";
 import { Resume } from "../constants/keys";
 import { modalMappings } from "../constants/modalMappings";
 import { openGallery } from "../functions/camera";
+import useProfilePicture from "../hooks/useProfilePicture";
 
 const ResumeScreen = ({ navigation, route, setP }) => {
   const openModal = (code) => {
@@ -20,10 +21,9 @@ const ResumeScreen = ({ navigation, route, setP }) => {
     <View className="flex flex-col w-full h-full items-center justify-center bg-fill-background p-9">
       <View className="flex flex-col w-full space-y-6 items-center">
         <Pressable
-          //onPress={() => console.log('press')}
           onPress={() => openGallery(processImage)}
         >
-          <CircularImage width="w-1/2" />
+          <CircularImage width="w-1/2" url={useProfilePicture()} />
         </Pressable>
         <View>
           <CText styles="text-3xl font-bold">enter your details.</CText>
