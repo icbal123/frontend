@@ -28,7 +28,7 @@ const ProfileTile = ({ navigation, profile }) => {
     >
       <View className="flex flex-col space-y-1 items-center w-1/2 p-4">
         <CircularImage url={imageURL} isLoading={imageLoading} />
-        <CText>{profile.email}</CText>
+        <CText>{profile.p_info.first_name}</CText>
       </View>
     </Pressable>
   );
