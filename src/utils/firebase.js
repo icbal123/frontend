@@ -38,14 +38,3 @@ export const db = getFirestore(app);
 
 // Initialise Cloud Storage
 export const storage = getStorage(app);
-
-export const getPostDataByStoreID = async (id) => {
-  const q = query(collection(db, "Post"), where("store_id", "==", id));
-  const querySnapshot = await getDocs(q);
-  const queriedPostData = [];
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    queriedPostData.push(doc.data());
-  });
-  return queriedPostData;
-};
