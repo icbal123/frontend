@@ -13,10 +13,10 @@ module.exports = {
       text: {
         primary: "#FFFFFF",
         link: "#0021F3",
+        errorRed: "#FF0000",
       },
     },
-    extend: {
-    },
+    extend: {},
   },
   plugins: [],
 };

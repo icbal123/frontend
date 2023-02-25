@@ -4,7 +4,14 @@ import {
   updateProfile,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  setDoc,
+  doc,
+} from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 
 /* User
@@ -67,8 +74,8 @@ const createUser = async ({ email, password }) => {
       photoURL: "",
     });
     return userCredentials.user.uid;
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    throw e;
   }
 };
 
@@ -87,21 +94,20 @@ const updateUser = async ({
   if (skills) obj.skills = skills;
   if (interests) obj.interests = interests;
   if (resume) obj.resume = resume;
-  
+
   if (!obj) return;
   try {
     await updateProfile(auth.currentUser, obj);
   } catch (e) {
-    console.error(e);
+    throw e;
   }
 };
 
 const loginUser = async ({ email, password }) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
-  }
-  catch (e) {
-    console.error(e);
+  } catch (e) {
+    throw e;
   }
 };
 
@@ -109,7 +115,7 @@ const logoutUser = async () => {
   try {
     await signOut(auth);
   } catch (e) {
-    console.error(e);
+    throw e;
   }
 };
 
@@ -125,7 +131,7 @@ const setUserProfilePic = async ({ image }) => {
       photoURL,
     });
   } catch (e) {
-    console.error(e);
+    throw e;
   }
 };
 
@@ -140,7 +146,7 @@ const getUserInfo = async ({ uid }) => {
       queriedUserData.push({ ...data, post_id: doc.id });
     });
   } catch (e) {
-    console.error(e);
+    throw e;
   } finally {
     return queriedUserData;
   }
@@ -157,7 +163,7 @@ const getAllUserInfo = async () => {
       queriedUserData.push({ ...data, post_id: doc.id });
     });
   } catch (e) {
-    console.error(e);
+    throw e;
   } finally {
     return queriedUserData;
   }
@@ -177,7 +183,7 @@ const getCurrentUserInfo = async () => {
       queriedUserData.push({ ...data, post_id: doc.id });
     });
   } catch (e) {
-    console.error(e);
+    throw e;
   } finally {
     return queriedUserData;
   }
