@@ -4,14 +4,29 @@ import { Pressable, View } from "react-native";
 import CircularImage from "../components/common/CircularImage";
 import CText from "../components/common/CText";
 import { ScrollView } from "react-native";
+import { storage } from "../utils/firebase";
+import { ref } from "@firebase/storage";
 
 const ProfileTile = ({ navigation, profile }) => {
+  const [ imageLoading, setImageLoading ] = useState(true);
+  const [ imageURL, setImageURL ] = useState();
+  
+  useEffect(() => {
+    setImageLoading(true);
+    getDownloadURL(ref(storage, profile.photoURL))
+        .then((url) => {
+            setImageURL(url);
+            setImageLoading(false);
+        })
+        .catch((e) => setImageLoading(false));
+  }, [ profile ]);
+
   return (
     <Pressable
         onPress={() => navigation.navigate('SummaryScreen', { email: profile.email, data: profile })}
     >
       <View className="flex flex-col space-y-1 items-center w-1/2 p-4">
-        <CircularImage />
+        <CircularImage url={imageURL} isLoading={imageLoading} />
         <CText>{profile.email}</CText>
       </View>
     </Pressable>

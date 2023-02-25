@@ -90,7 +90,6 @@ const Form = ({
                 isEnabled={canSubmit}
                 text={submitButtonLabel}
                 onClick={() => {
-                    console.log(obj);
                     onSubmit(obj);
                     if (!shouldPreserveValues) setObj(getDefaultObj());
                 }}

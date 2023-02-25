@@ -1,3 +1,5 @@
+import { getDownloadURL, ref } from "@firebase/storage";
+import { useBackHandler } from "@react-native-community/hooks";
 import { useEffect, useState } from "react";
 import { Pressable } from "react-native";
 import { DeviceEventEmitter } from "react-native";
@@ -10,16 +12,34 @@ import { Resume } from "../constants/keys";
 import { modalMappings } from "../constants/modalMappings";
 import { openGallery } from "../functions/camera";
 import { checkFulfilledPL } from "../functions/validation";
-import useProfilePicture from "../hooks/useProfilePicture";
-import { getCurrentUserInfo } from "../utils/accounts";
+import { useProfilePicture } from "../hooks";
+import { getCurrentUserInfo, setUserProfilePic } from "../utils/accounts";
+import { auth, storage } from "../utils/firebase";
 
 const ResumeScreen = ({ navigation, route, setFulfilledPL }) => {
+    const [ imageLoading, setImageLoading ] = useState(true);
+    const [ imageURL, setImageURL ] = useState(); 
     const [ p, setP ] = useState({});
-    const[ l, setL ] = useState(0);
-    
+    const [ l, setL ] = useState(0);
+    const [ navigationListener, setNavigationListener ] = useState();
+
+    const setNewImage = (photoURL) => {
+        setImageLoading(true);
+        getDownloadURL(ref(storage, photoURL))
+            .then((url) => {
+                setImageURL(url);
+                setImageLoading(false);
+            })
+            .catch((e) => setImageLoading(false));
+    };
+
+    useBackHandler(() => !checkFulfilledPL(p, l));
+
   useEffect(() => {
     getCurrentUserInfo()
         .then(([ data ]) => {
+            setNewImage(data.photoURL);
+            
             setP(data.p_info || {});
             setL(data.interests ? data.interests.length : 0);
         })
@@ -41,8 +61,16 @@ const ResumeScreen = ({ navigation, route, setFulfilledPL }) => {
     navigation.navigate(modalMappings[code]);
   };
 
-  const processImage = (img) => {
-    console.log(img);
+  const processImage = async (img) => {
+    if (!img) return;
+    const resp = await fetch(img.uri);
+    const blob = await resp.blob();
+    try {
+        await setUserProfilePic({ image: blob });
+        setNewImage(auth.currentUser.photoURL);
+    } catch (e) {
+        console.error(e);
+    }
   };
 
   const canExit = checkFulfilledPL(p, l);
@@ -74,7 +102,7 @@ const ResumeScreen = ({ navigation, route, setFulfilledPL }) => {
         <Pressable
           onPress={() => openGallery(processImage)}
         >
-          <CircularImage width="w-1/2" url={useProfilePicture()} />
+          <CircularImage width="w-1/2" url={imageURL} isLoading={imageLoading} />
         </Pressable>
         <View>
           <CText styles="text-3xl font-bold">enter your details.</CText>

@@ -5,6 +5,9 @@ import { Resume } from "../constants/keys";
 import Accordion from "../components/layouts/Accordion";
 import SubtitledText from "../components/text/SubtitledText";
 import { getDateStr } from "../functions/date";
+import CircularImage from "../components/common/CircularImage";
+import { storage } from "../utils/firebase";
+import { ref } from "@firebase/storage";
 
 const BlankView = () => <CText>nothing here.</CText>;
 const BoldLabel = ({ label, content }) => <CText styles='text-sm'><CText styles='text-sm font-bold'>{label}</CText> {content}</CText>;
@@ -95,9 +98,27 @@ const SummaryScreen = ({ navigation, route }) => {
     
     const [ opened, setOpened ] = useState();
 
+    const [ imageLoading, setImageLoading ] = useState(true);
+    const [ imageURL, setImageURL ] = useState();
+    
+    useEffect(() => {
+        setImageLoading(true);
+        getDownloadURL(ref(storage, data.photoURL))
+            .then((url) => {
+                setImageURL(url);
+                setImageLoading(false);
+            })
+            .catch((e) => setImageLoading(false));
+    }, [ data ]);
+
     return <View
         className="flex flex-col w-full h-full items-stretch p-9 bg-fill-background space-y-6 overflow-auto"
     >
+        <CircularImage 
+            width='w-1/2'
+            isLoading={imageLoading}
+            url={imageURL}
+        />
         <SubtitledText 
             text={`${data.p_info.first_name} ${data.p_info.last_name}`}
             subtitle='a quick summary'
@@ -153,6 +174,16 @@ const SummaryScreen = ({ navigation, route }) => {
                     <InterestsView interests={data.interests} />
                 </Accordion>
             </View>
+        </View>
+        <View
+            className='absolute top-4 right-4'
+        >
+            <CircleButton 
+                isEnabled
+                char='X'
+                color='bg-text-errorRed'
+                onClick={() => navigation.pop()}
+            />
         </View>
     </View>;
 };

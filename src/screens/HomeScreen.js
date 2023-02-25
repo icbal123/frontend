@@ -45,7 +45,6 @@ const HomeScreen = ({ navigation }) => {
   </View>;
 
   if (!currentUser) return <LoginScreen navigation={navigation} setCurrentUser={setCurrentUser} />;
-  console.log(fulfilledPL);
   if (fulfilledPL) return <BroadcastScreen navigation={navigation} />;
   return <ResumeScreen navigation={navigation} refresh={refresh} setFulfilledPL={(newPL) => setFulfilledPL(newPL)} />;
 };

@@ -194,7 +194,6 @@ const getAllUserInfo = async () => {
       queriedUserData.push(data);
     });
   } catch (e) {
-    console.log(e);
     throw e;
   } finally {
     return queriedUserData;

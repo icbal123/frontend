@@ -1,7 +1,12 @@
-import { Image } from "react-native";
+import { View, ActivityIndicator, Image } from "react-native";
 
-const CircularImage = ({ url, width }) => {
-    url = url || 'https://iaftm.tmgrup.com.tr/5e6834/1200/627/0/31/1200/658?u=https://iftm.tmgrup.com.tr/2022/12/31/son-dakika-transfer-haberi-cristiano-ronaldo-resmen-al-nassrda-1672435192436.jpeg';
+const CircularImage = ({ url, width, isLoading }) => {
+    if (isLoading) return <View
+        className={`rounded-full ${width || w-full} aspect-square items-center justify-center flex`}
+    >
+        <ActivityIndicator size='large' />
+    </View>;
+
     return <Image
         source={{
             uri: url,
