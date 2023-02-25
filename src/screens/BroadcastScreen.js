@@ -23,30 +23,30 @@ const BroadcastScreen = ({ navigation }) => {
   };
 
   const duration = 1500;
-  const [ to, setTO ] = useState();
+  const [to, setTO] = useState();
 
   const resetValues = () => {
     scaleAnim.stopAnimation();
     opacityAnim.stopAnimation();
     scaleAnim.setValue(0);
     opacityAnim.setValue(1);
-  }
+  };
 
   const reset = () => {
     resetValues();
     rippleOut();
-  }
+  };
 
   const rippleOut = () => {
     Animated.timing(scaleAnim, {
       toValue: 1,
       duration: duration,
-      useNativeDriver: true
+      useNativeDriver: true,
     }).start();
     Animated.timing(opacityAnim, {
       toValue: 0,
       duration: duration,
-      useNativeDriver: true
+      useNativeDriver: true,
     }).start();
 
     setTO(setTimeout(reset, duration));
@@ -60,16 +60,16 @@ const BroadcastScreen = ({ navigation }) => {
     return () => {
       if (to) clearTimeout(to);
     };
-  }, [ isBroadcasting ]);
+  }, [isBroadcasting]);
 
   return (
     <View className="w-full h-full flex relative bg-fill-background items-center justify-center p-9">
       <View className="flex absolute inset-0 items-center justify-center">
-        <Animated.View 
+        <Animated.View
           style={{
-            transform: [ { scale: scaleAnim }],
-            width: '100%',
-            height: '100%',
+            transform: [{ scale: scaleAnim }],
+            width: "100%",
+            height: "100%",
             opacity: opacityAnim,
             borderColor: "#0006B1",
             borderWidth: 25
@@ -87,7 +87,7 @@ const BroadcastScreen = ({ navigation }) => {
           }
         />
         <View className="flex flex-col space-y-2 items-center w-full">
-          <View className='flex w-full'>
+          <View className="flex w-full">
             <TextButton
               isEnabled
               text={`${isBroadcasting ? "stop" : "start"} broadcasting`}
@@ -97,7 +97,7 @@ const BroadcastScreen = ({ navigation }) => {
           <View>
             <TextLink
               text="edit your details >"
-              onClick={() => navigation.navigate('ResumeScreen')}
+              onClick={() => navigation.navigate("ResumeScreen")}
             />
           </View>
         </View>
