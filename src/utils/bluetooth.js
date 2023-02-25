@@ -1,9 +1,8 @@
-import { BleManager } from "react-native-ble-plx";
+import { BleManager } from "react-native-ble-manager";
 
-const createBleManager = () => {
-  const manager = new BleManager();
-  manager.setLogLevel(LogLevel.Verbose);
-  return manager;
+const startBleManager = async (options = undefined) => {
+  await BleManager.start(options);
+  return true;
 };
 
 const getNearbyDevices = (manager, callback = ((scannedDevice) => {})) => {
