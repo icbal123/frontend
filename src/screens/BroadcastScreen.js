@@ -52,7 +52,6 @@ const BroadcastScreen = ({ navigation }) => {
     setTO(setTimeout(reset, duration));
   };
 
-  cons
   useEffect(() => {
     resetValues();
     if (isBroadcasting) rippleOut();
@@ -73,8 +72,7 @@ const BroadcastScreen = ({ navigation }) => {
             height: '100%',
             opacity: opacityAnim,
             borderColor: "#0006B1",
-            borderWidth: 10,
-            borderRadius: 10000,
+            borderWidth: 25
           }}
         />
       </View>

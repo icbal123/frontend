@@ -6,10 +6,12 @@ import CText from "../components/common/CText";
 
 const ProfileTile = ({ profile }) => {
   return (
-    <Pressable>
+    <Pressable
+        onPress={() => }
+    >
       <View className="flex flex-col space-y-1 items-center w-1/2 p-4">
-        <CircularImage />
-        <CText>{profile}</CText>
+        <CircularImage url={} />
+        <CText>{profile.email}</CText>
       </View>
     </Pressable>
   );
