@@ -8,10 +8,10 @@ const TextButton = ({ text, onClick, isEnabled }) => {
         onPress={() => {
             if (isEnabled) onClick();
         }}
-        className={`flex ${fillColor} items-center justify-center w-full rounded-lg px-3 py-3`}
+        className={`flex flex-col ${fillColor} items-center justify-center w-full rounded-lg px-3 py-3`}
     >
         <CText>{text}</CText>
-    </TouchableOpacity>
+    </TouchableOpacity>;
 };
 
 export default TextButton;

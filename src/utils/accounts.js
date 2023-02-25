@@ -8,6 +8,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 
 /* User
+uuid: String,
 p_info: {
     first_name: String,
     last_name: String,

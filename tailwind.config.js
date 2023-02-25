@@ -16,10 +16,6 @@ module.exports = {
       }
     },
     extend: {
-      fontSize: {
-        h1: '1.875rem',
-        h2: '1.5rem',
-      }
     },
   },
   plugins: [],

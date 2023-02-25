@@ -11,9 +11,9 @@ const SubtitledText = ({
     subtitleColor,
     subtitleStyles
 }) => {
-    align = align || 'start';
+    align = align || 'center';
     textColor = textColor || 'text-text-primary';
-    textStyles = textStyles || 'text-h1 font-bold';
+    textStyles = textStyles || 'text-3xl font-bold';
     subtitleColor = subtitleColor || 'text-text-primary';
     subtitleStyles = subtitleStyles || '';
 
