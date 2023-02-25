@@ -3,9 +3,20 @@ import { View } from "react-native";
 import TextButton from "../components/clickable/TextButton";
 import TextLink from "../components/clickable/TextLink";
 import SubtitledText from "../components/text/SubtitledText";
+import { startBroadcast, stopBroadcast } from "../utils/bluetooth";
 
 const BroadcastScreen = ({ navigation }) => {
   const [isBroadcasting, setIsBroadcasting] = useState(false);
+  const [interval, setInterval] = useState(null);
+  const toggleBroadcast = async (isBroadcasting) => {
+    // console.log(devices);
+    if (!isBroadcasting) {
+      await startBroadcast();
+    } else {
+      stopBroadcast();
+    }
+    setIsBroadcasting(!isBroadcasting);
+  };
 
   return (
     <View className="w-full h-full flex relative bg-fill-background items-center justify-center p-9">
@@ -23,7 +34,7 @@ const BroadcastScreen = ({ navigation }) => {
           <TextButton
             isEnabled
             text={`${isBroadcasting ? "stop" : "start"} broadcasting`}
-            onClick={() => setIsBroadcasting(!isBroadcasting)}
+            onClick={() => toggleBroadcast(isBroadcasting)}
           />
           <TextLink
             text="edit your details"
@@ -32,7 +43,13 @@ const BroadcastScreen = ({ navigation }) => {
         </View>
       </View>
       <View className="absolute bottom-9 left-9 right-9">
-        <TextButton isEnabled text="view nearby profiles" onClick={() => {}} />
+        <TextButton
+          isEnabled
+          text="view nearby profiles"
+          onClick={() => {
+            navigation.navigate("NearbyScreen");
+          }}
+        />
       </View>
     </View>
   );

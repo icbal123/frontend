@@ -1,9 +1,11 @@
 import { auth, db, storage } from "./firebase";
 import {
   createUserWithEmailAndPassword,
-  updateProfile,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { getMacAddress } from "react-native-device-info";
+import "react-native-get-random-values";
+import { v4 } from "uuid";
 import {
   collection,
   query,
@@ -11,6 +13,7 @@ import {
   getDocs,
   setDoc,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 
@@ -27,7 +30,7 @@ p_info: {
 experience: Array[{
     type: enum (Work, Volunteer, Internship, CCA),
     title: String,
-    company: String,
+    company: String,g
     from: DateTime,
     to: DateTime,
     description: Array[String],
@@ -59,11 +62,9 @@ const createUser = async ({ email, password }) => {
       email,
       password
     );
-    await updateProfile(userCredentials.user, {
-      email,
-      photoURL: "profile_pictures/default.png",
-    });
-    await setDoc(doc(db, "User", userCredentials.user.uid), {
+    const uuid = v4();
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
+      post: auth.currentUser.uid,
       email,
       p_info: {},
       experience: [],
@@ -71,9 +72,22 @@ const createUser = async ({ email, password }) => {
       skills: [],
       interests: [],
       resume: null,
-      photoURL: "",
+      photoURL: "profile_pictures/default.png",
+      broadcast: false,
+      uuid,
     });
+    await loginUser({ email, password });
     return userCredentials.user.uid;
+  } catch (e) {
+    throw e;
+  }
+};
+
+const userBroadcasting = async (broadcast) => {
+  const mac = await getMacAddress();
+  console.log(mac);
+  try {
+    await updateDoc(doc(db, "users", auth.currentUser.uid), { broadcast, mac });
   } catch (e) {
     throw e;
   }
@@ -97,7 +111,7 @@ const updateUser = async ({
 
   if (!obj) return;
   try {
-    await updateProfile(auth.currentUser, obj);
+    await updateDoc(doc(db, "users", auth.currentUser.uid), obj);
   } catch (e) {
     throw e;
   }
@@ -105,7 +119,10 @@ const updateUser = async ({
 
 const loginUser = async ({ email, password }) => {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    const user = await signInWithEmailAndPassword(auth, email, password);
+    const mac = await getMacAddress();
+    await updateDoc(doc(db, "users", auth.currentUser.uid), { mac });
+    return user;
   } catch (e) {
     throw e;
   }
@@ -127,7 +144,7 @@ const setUserProfilePic = async ({ image }) => {
   const storageRef = ref(storage, photoURL);
   try {
     await uploadBytes(storageRef, image, metadata);
-    await updateProfile(auth.currentUser, {
+    await updateDoc(doc(db, "users", auth.currentUser.uid), {
       photoURL,
     });
   } catch (e) {
@@ -137,12 +154,11 @@ const setUserProfilePic = async ({ image }) => {
 
 const getUserInfo = async ({ uid }) => {
   let queriedUserData = [];
-  const q = query(collection(db, "User"), where("uid", "==", uid));
+  const q = query(collection(db, "users"), where("post", "==", uid));
   try {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      data.timestamp = new Date(data.timestamp.seconds * 1000);
       queriedUserData.push({ ...data, post_id: doc.id });
     });
   } catch (e) {
@@ -154,15 +170,15 @@ const getUserInfo = async ({ uid }) => {
 
 const getAllUserInfo = async () => {
   let queriedUserData = [];
-  const q = query(collection(db, "User"));
+  const q = query(collection(db, "users"));
   try {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      data.timestamp = new Date(data.timestamp.seconds * 1000);
       queriedUserData.push({ ...data, post_id: doc.id });
     });
   } catch (e) {
+    console.log(e);
     throw e;
   } finally {
     return queriedUserData;
@@ -172,14 +188,29 @@ const getAllUserInfo = async () => {
 const getCurrentUserInfo = async () => {
   let queriedUserData = [];
   const q = query(
-    collection(db, "User"),
-    where("uid", "==", auth.currentUser.uid)
+    collection(db, "users"),
+    where("post", "==", auth.currentUser.uid)
   );
   try {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      data.timestamp = new Date(data.timestamp.seconds * 1000);
+      queriedUserData.push({ ...data, post_id: doc.id });
+    });
+  } catch (e) {
+    throw e;
+  } finally {
+    return queriedUserData;
+  }
+};
+
+const getAllBroadcastingAndCloseUsers = async (profiles) => {
+  let queriedUserData = [];
+  const q = query(collection(db, "users"), where("broadcast", "==", true));
+  try {
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
       queriedUserData.push({ ...data, post_id: doc.id });
     });
   } catch (e) {
@@ -198,4 +229,6 @@ export {
   getUserInfo,
   getAllUserInfo,
   getCurrentUserInfo,
+  userBroadcasting,
+  getAllBroadcastingAndCloseUsers,
 };

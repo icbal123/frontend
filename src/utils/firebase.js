@@ -4,7 +4,7 @@ import {
   initializeAuth,
   getReactNativePersistence,
 } from "firebase/auth/react-native";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, initializeFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -28,7 +28,10 @@ export const auth = initializeAuth(app, {
 });
 
 // Initialise Cloud Firestore
-export const db = getFirestore(app);
+export const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+  useFetchStreams: false,
+});
 
 // Initialise Cloud Storage
 export const storage = getStorage(app);

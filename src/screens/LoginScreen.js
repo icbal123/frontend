@@ -1,10 +1,11 @@
 import { View, Text } from "react-native";
 import { useState } from "react";
 import Input from "../components/inputs/Input";
+import { auth } from "../utils/firebase";
 import TextButton from "../components/clickable/TextButton";
 import { createUser, loginUser } from "../utils/accounts";
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation, setCurrentUser }) => {
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,14 +25,15 @@ const LoginScreen = ({ navigation }) => {
       <TextButton
         isEnabled
         text="Login"
-        onClick={() => {
+        onClick={async () => {
           // navigation.navigate("BroadcastScreen");
-          loginUser({ email, password })
+          await loginUser({ email, password })
             .then((res) => {
-              console.log(res);
+              setCurrentUser(auth.currentUser);
               setError("");
             })
             .catch((err) => {
+              console.log(err);
               setError("Email or password is incorrect");
             });
         }}
@@ -40,14 +42,15 @@ const LoginScreen = ({ navigation }) => {
       <TextButton
         isEnabled
         text="Signup"
-        onClick={() => {
+        onClick={async () => {
           // navigation.navigate("NearbyScreen");
-          createUser({ email, password })
+          await createUser({ email, password })
             .then((res) => {
-              console.log(res);
+              setCurrentUser(auth.currentUser);
               setError("");
             })
             .catch((err) => {
+              console.log(err);
               setError("We were unable to create your account");
             });
         }}
