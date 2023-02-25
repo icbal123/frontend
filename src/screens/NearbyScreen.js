@@ -1,21 +1,17 @@
 import { useState, useEffect } from "react";
-import { Image, TouchableWithoutFeedback, View } from "react-native";
 import { startScan, stopScan } from "../utils/bluetooth";
+import { Pressable, View } from "react-native";
+import CircularImage from "../components/common/CircularImage";
 import CText from "../components/common/CText";
 
 const ProfileTile = ({ profile }) => {
   return (
-    <TouchableWithoutFeedback>
+    <Pressable>
       <View className="flex flex-col space-y-1 items-center w-1/2 p-4">
-        <Image
-          source={{
-            uri: "https://reactnative.dev/img/tiny_logo.png",
-          }}
-          className="rounded-full w-full aspect-square object-cover"
-        />
+        <CircularImage />
         <CText>{profile}</CText>
       </View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
 
