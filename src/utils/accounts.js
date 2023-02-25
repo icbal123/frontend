@@ -77,6 +77,7 @@ const createUser = async ({ email, password }) => {
       interests: [],
       resume: null,
       broadcast: false,
+      photoURL: "profile_pictures/default.png",
       uuid,
     });
     await loginUser({ email, password });
@@ -87,10 +88,8 @@ const createUser = async ({ email, password }) => {
 };
 
 const userBroadcasting = async (broadcast) => {
-  const mac = await getMacAddress();
-  console.log(mac);
   try {
-    await updateDoc(doc(db, "users", auth.currentUser.uid), { broadcast, mac });
+    await updateDoc(doc(db, "users", auth.currentUser.uid), { broadcast });
   } catch (e) {
     throw e;
   }
@@ -123,8 +122,6 @@ const updateUser = async ({
 const loginUser = async ({ email, password }) => {
   try {
     const user = await signInWithEmailAndPassword(auth, email, password);
-    const mac = await getMacAddress();
-    await updateDoc(doc(db, "users", auth.currentUser.uid), { mac });
     return user;
   } catch (e) {
     throw e;
@@ -147,6 +144,7 @@ const setUserProfilePic = async ({ image }) => {
   const storageRef = ref(storage, photoURL);
   try {
     await uploadBytes(storageRef, image, metadata);
+    await updateDoc(doc(db, "users", auth.currentUser.uid), { photoURL });
     await updateProfile(auth.currentUser, {
       photoURL,
     });
