@@ -77,9 +77,6 @@ function Navigator() {
         <RootStack.Screen name="EducationModal" component={EducationModal} />
         <RootStack.Screen name="SkillsModal" component={SkillsModal} />
         <RootStack.Screen name="InterestsModal" component={InterestsModal} />
-        <RootStack.Screen name="EducationModal" component={EducationModal} />
-        <RootStack.Screen name="SkillsModal" component={SkillsModal} />
-        <RootStack.Screen name="InterestsModal" component={InterestsModal} />
       </RootStack.Group>
     </RootStack.Navigator>
   );

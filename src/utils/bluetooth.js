@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import RNAndroidLocationEnabler from "react-native-android-location-enabler";
 
-const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+// const BleManagerModule = NativeModules.BleManager;
+// const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 const eventEmitter = new NativeEventEmitter(NativeModules.BLEAdvertiser);
 
@@ -42,7 +42,6 @@ const startScan = async (
     const btGranted = await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN
     );
-
     const onUserRefuse = () => {
       console.log("User refuse");
     };
@@ -81,11 +80,6 @@ const startScan = async (
       }
     };
 
-    if (!shouldRegisterListeners) {
-      onPermissionsFail();
-      return;
-    }
-
     if (btGranted === PermissionsAndroid.RESULTS.GRANTED) {
       await onPermissionsPassed();
     } else {
@@ -96,10 +90,15 @@ const startScan = async (
       else onUserRefuse();
     }
   }
+  if (!shouldRegisterListeners) {
+    onPermissionsFail();
+    return;
+  }
   eventEmitter.addListener("onDeviceFound", (deviceData) => {
     console.log(deviceData);
+    lst.push(deviceData);
+    setProfiles([...new Set(lst)]);
   });
-  setProfiles([...new Set(lst)]);
   BLEAdvertiser.setCompanyId(0xdeadbeef1337);
   BLEAdvertiser.scan([], {});
   const scanInterval = setInterval(() => {
