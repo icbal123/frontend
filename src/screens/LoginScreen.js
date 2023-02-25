@@ -13,7 +13,8 @@ const LoginScreen = ({ navigation, setCurrentUser }) => {
   return (
     <View className="w-full h-full flex relative items-center justify-center p-9 bg-fill-background">
       <View className="flex w-full bg-fill-modal drop-shadow rounded-lg p-9 items-center">
-        <CText styles="text-3xl font-bold" color='text-fill-primary'>welcome to ConferenceConnect.</CText>
+        <CText styles="text-3xl font-bold" color='text-fill-secondary'>welcome to</CText>
+        <CText styles="text-2xl font-bold" color='text-fill-primary'>ConferenceConnect.</CText>
         <View className="pt-12 pb-2 w-full flex flex-col space-y-4 items-stretch">
           <View>
             <Input placeholder="email" value={email} onChangeText={setEmail} />
