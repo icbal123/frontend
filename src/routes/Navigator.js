@@ -6,6 +6,10 @@ import LoginScreen from "../screens/LoginScreen";
 import { auth } from "../utils/firebase";
 import SummaryScreen from "../screens/SummaryScreen";
 import PersonalInformationModal from "../components/modal/resume/PersonalInformationModal";
+import WorkExperienceModal from "../components/modal/resume/WorkExperienceModal";
+import EducationModal from "../components/modal/resume/EducationModal";
+import SkillsModal from "../components/modal/resume/SkillsModal";
+import InterestsModal from "../components/modal/resume/InterestsModal";
 
 const MainStack = createNativeStackNavigator();
 const RootStack = createNativeStackNavigator();
@@ -56,8 +60,31 @@ function Navigator() {
         component={MainStackScreen}
         options={{ headerShown: false }}
       />
-      <RootStack.Group screenOptions={{ presentation: 'modal' }}>
-        <RootStack.Screen name="PersonalInformationModal" component={PersonalInformationModal} />
+      <RootStack.Group screenOptions={{ 
+        presentation: 'transparentModal',
+        animationTypeForReplace: 'pop',
+        animation: 'slide_from_bottom'
+      }}>
+        <RootStack.Screen 
+          name="PersonalInformationModal" 
+          component={PersonalInformationModal} 
+        />
+        <RootStack.Screen 
+          name="WorkExperienceModal" 
+          component={WorkExperienceModal} 
+        />
+        <RootStack.Screen 
+          name="EducationModal" 
+          component={EducationModal} 
+        />
+        <RootStack.Screen 
+          name="SkillsModal" 
+          component={SkillsModal} 
+        />
+        <RootStack.Screen 
+          name="InterestsModal" 
+          component={InterestsModal} 
+        />
       </RootStack.Group>
     </RootStack.Navigator>
   );

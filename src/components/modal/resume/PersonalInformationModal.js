@@ -1,5 +1,4 @@
-import { Text } from "react-native";
-import CText from "../../common/CText";
+import Form from "../../layouts/Form";
 import BaseModal from "../BaseModal";
 
 const PersonalInformationModal = ({ navigation, route }) => {
@@ -7,7 +6,14 @@ const PersonalInformationModal = ({ navigation, route }) => {
         title='Personal Information'
         goBack={() => navigation.pop()}
     >
-        <Text>personal</Text>
+        
+        <Form 
+            keys={['first_name', 'last_name', 'phone', 'website', 'linkedin', 'github' ]}
+            labels={['first name', 'last name', 'phone', 'website', 'linkedin', 'github']}
+            requiredKeys={['first_name', 'last_name', 'phone']}
+            onSubmit={(newObj) => console.log(newObj)}
+            submitButtonLabel='Save'
+        />
     </BaseModal>;
 };
 

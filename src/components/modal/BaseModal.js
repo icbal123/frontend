@@ -1,27 +1,26 @@
-import { TouchableWithoutFeedback } from "react-native";
-import { View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import CText from "../common/CText";
 
 const BaseModal = ({ goBack, children, title }) => {
     return <View
-        className='flex w-full h-full bg-transparent'
+        className='flex flex-col w-full h-full'
     >
-        <TouchableWithoutFeedback 
+        <Pressable
             onPress={() => goBack()}
         >
-            <View className='flex w-full h-full' />
-        </TouchableWithoutFeedback>
+            <View className="flex grow" />
+        </Pressable>
         <View
-            className='absolute inset-10 drop-shadow bg-fill-modal flex flex-col space-y-4 items-center'
+            className="flex h-5/6 drop-shadow bg-fill-modal space-y-4 rounded-lg p-4 items-center"
         >
             <View>
-                <CText styles='text-3xl font-bold'>{title}</CText>
+                <CText styles='text-3xl font-bold' color='text-text-alternate'>{title}</CText>
             </View>
-            <View
-                className="grow w-full"
+            <ScrollView
+                className="flex w-full shrink"
             >
                 {children}
-            </View>
+            </ScrollView>
         </View>
     </View>;
 };

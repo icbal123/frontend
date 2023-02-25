@@ -1,31 +1,27 @@
-import { Pressable, TextInput, View } from "react-native";
+import { TextInput, View } from "react-native";
 
 const Input = ({
   placeholder,
   value,
   onChangeText,
-  children,
-  style,
+  styles,
+  inputMode,
   secureTextEntry,
-  onPressIcon,
 }) => {
   return (
     <View
-      keyboardShouldPersistTaps="handled"
-      className="w-full pb-1 border-b flex-row justify-between"
-      style={style}
+      className="flex w-full min-h-4 pb-1 border-b flex-row justify-between"
+      style={styles}
     >
       <TextInput
-        className="text-lg font-secondary flex-1 leading-5"
+        className="w-full text-lg font-secondary flex-1 leading-5"
         placeholder={placeholder}
         editable
         value={value}
         onChangeText={onChangeText}
+        inputMode={inputMode}
         secureTextEntry={secureTextEntry}
       />
-      <Pressable hitSlop={10} onPress={onPressIcon}>
-        {children}
-      </Pressable>
     </View>
   );
 };

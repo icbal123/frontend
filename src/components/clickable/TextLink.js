@@ -1,13 +1,16 @@
-import { TouchableWithoutFeedback } from "react-native";
+import { View , Pressable } from "react-native";
 import CText from "../common/CText";
 
-const TextLink = ({ text, onClick }) => {
+const TextLink = ({ text, color, onClick }) => {
+    color = color || 'text-text-link';
     onClick = onClick || (() => {});
-    return <TouchableWithoutFeedback
+    return <Pressable
         onPress={() => onClick()}
     >
-        <CText styles='text-sm' color='text-text-link'>{`${text} >`}</CText>
-    </TouchableWithoutFeedback>
+        <View> 
+            <CText styles='text-sm' color={color}>{text}</CText>
+        </View>
+    </Pressable>
 };
 
 export default TextLink;
