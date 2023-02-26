@@ -15,7 +15,7 @@ const renderEducation = (education) => {
         <CText color='text-text-alternate'>institution: {education.title}</CText>
         <CText color='text-text-alternate'>from {getDateStr(education.from)} to {getDateStr(education.to)}</CText>
         <CText color='text-text-alternate'>GPA: {education.gpa !== null ? education.gpa : '-'}</CText>
-        <CText color='text-text-alternate' styles='font-bold'>relevant_coursework</CText>
+        <CText color='text-text-alternate' styles='font-bold'>relevant coursework</CText>
         {education.relevant_coursework !== null 
             ? education.relevant_coursework.map((cw, _) => <CText color='text-text-alternate'>{'- '}{cw}</CText>)
             : <CText color='text-text-alternate'>none to display.</CText>

@@ -20,7 +20,9 @@ const InterestsModal = ({ navigation, route }) => {
                     return;
                 }
 
-                setInitialValues(data.interests);
+                setInitialValues(data.interests.map((interest, _) => {
+                    return { interest };
+                }));
             })
             .catch(console.error);
     }, []);
